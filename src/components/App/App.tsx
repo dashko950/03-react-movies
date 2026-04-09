@@ -66,7 +66,6 @@ function App() {
       document.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "";
-      document.removeEventListener("keydown", handleKeyDown);
     }
 
     return () => {
@@ -89,7 +88,7 @@ function App() {
       />
       <SearchBar onSubmit={handleSearch} />
       <main className={styles.main}>
-        {error && <ErrorMessage message={error} />}
+        {error && <ErrorMessage />}
         {isLoading && <Loader />}
         {!isLoading && !error && movies.length > 0 && (
           <MovieGrid movies={movies} onSelect={handleMovieSelect} />
