@@ -14,7 +14,7 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const [currentQuery, setCurrentQuery] = useState<string>("");
+  const [, setCurrentQuery] = useState<string>("");
 
   const handleSearch = useCallback(async (query: string) => {
     if (!query.trim()) {
@@ -25,7 +25,7 @@ function App() {
     setIsLoading(true);
     setError(null);
     setMovies([]);
-    setCurrentQuery(query);
+    setCurrentQuery(query); // теперь используется
 
     try {
       const data = await fetchMovies({ query });
@@ -54,6 +54,7 @@ function App() {
     setSelectedMovie(null);
   }, []);
 
+  // Закрытие модального окна по клавише Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && selectedMovie) {

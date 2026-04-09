@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { Movie } from "../../types/movie";
 import styles from "./MovieModal.module.css";
@@ -9,10 +8,9 @@ interface MovieModalProps {
 }
 
 const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
-  const backdropRef = useRef<HTMLDivElement>(null);
-
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === backdropRef.current) {
+    // Закрываем модалку только если кликнули именно по backdrop (тёмному фону), а не по самому модальному окну
+    if (event.target === event.currentTarget) {
       onClose();
     }
   };
@@ -33,7 +31,6 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
 
   return createPortal(
     <div
-      ref={backdropRef}
       className={styles.backdrop}
       role="dialog"
       aria-modal="true"
@@ -47,11 +44,13 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
         >
           &times;
         </button>
+
         <img
           src={getImageUrl(movie.backdrop_path || movie.poster_path)}
           alt={movie.title}
           className={styles.image}
         />
+
         <div className={styles.content}>
           <h2 className={styles.title}>{movie.title}</h2>
           <p className={styles.overview}>
