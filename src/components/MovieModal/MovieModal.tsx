@@ -1,3 +1,5 @@
+// src/components/MovieModal/MovieModal.tsx
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { Movie } from "../../types/movie";
 import styles from "./MovieModal.module.css";
@@ -8,9 +10,34 @@ interface MovieModalProps {
 }
 
 const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  // Блокування скролу при відкритті модалки
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
+  // Обробка клавіші Escape
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
+
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    // Закрываем модалку только если кликнули именно по backdrop (тёмному фону), а не по самому модальному окну
-    if (event.target === event.currentTarget) {
+    if (event.target === backdropRef.current) {
       onClose();
     }
   };
@@ -31,6 +58,7 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
 
   return createPortal(
     <div
+      ref={backdropRef}
       className={styles.backdrop}
       role="dialog"
       aria-modal="true"
@@ -44,13 +72,11 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
         >
           &times;
         </button>
-
         <img
           src={getImageUrl(movie.backdrop_path || movie.poster_path)}
           alt={movie.title}
           className={styles.image}
         />
-
         <div className={styles.content}>
           <h2 className={styles.title}>{movie.title}</h2>
           <p className={styles.overview}>

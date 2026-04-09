@@ -1,3 +1,4 @@
+// src/components/App/App.tsx
 import { useState, useCallback, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import SearchBar from "../SearchBar/SearchBar";
@@ -8,6 +9,8 @@ import MovieModal from "../MovieModal/MovieModal";
 import { fetchMovies } from "../../services/movieService";
 import type { Movie } from "../../types/movie";
 import styles from "./App.module.css";
+
+// ... решта коду без змін
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
